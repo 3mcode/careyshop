@@ -24,7 +24,7 @@
 PinShop 是一套基于 ThinkPHP 框架开发的高性能开源商城框架系统，秉承极简、极速、极致的开发理念，采用前后端分离，支持分布式部署。框架内部使用面向对象模块化调用，在多终端、跨平台时采用 REST API 进行数据交互，可直接对接 PC、移动设备、小程序、云部署，构建 Android、IOS 的 APP。
 
 ## 文档
-[文档中心](# "PinShop文档中心")
+[文档中心（待完善）](# "PinShop文档中心")
 
 ## 仓库
 [Github 仓库](https://github.com/3mcode/pinshop "Github 仓库")
