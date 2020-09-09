@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/badge/website-cunsam-yellow.svg" alt="CunSam"/>
+        <img src="https://img.shields.io/badge/website-CunSam-yellow.svg" alt="CunSam Website"/>
     </a>
     <a href="#">
         <img src="https://img.shields.io/github/license/3mcode/cunsam.svg" alt="CunSam License"/>
