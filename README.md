@@ -1,18 +1,17 @@
-
-<h1 align="center">PinShop 商城框架系统</h1>
+<h1 align="center">村商通</h1>
 
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/badge/website-PinShop-yellow.svg" alt="careyshop"/>
+        <img src="https://img.shields.io/badge/website-cunsam-yellow.svg" alt="CunSam"/>
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/license/3mcode/pinshop.svg" alt="careyshop_license"/>
+        <img src="https://img.shields.io/github/license/3mcode/cunsam.svg" alt="CunSam License"/>
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/release/3mcode/pinshop.svg" alt="careyshop_release"/>
+        <img src="https://img.shields.io/github/release/3mcode/cunsam.svg" alt="CunSam Release"/>
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/last-commit/3mcode/pinshop.svg" alt="careyshop_last-commit"/>
+        <img src="https://img.shields.io/github/last-commit/3mcode/cunsam.svg" alt="CunSam Last Commit"/>
     </a>
 </p>
 
@@ -21,10 +20,10 @@
 </p>
 
 ## 介绍
-PinShop 是一套基于 ThinkPHP 框架开发的高性能开源商城框架系统，秉承极简、极速、极致的开发理念，采用前后端分离，支持分布式部署。框架内部使用面向对象模块化调用，在多终端、跨平台时采用 REST API 进行数据交互，可直接对接 PC、移动设备、小程序、云部署，构建 Android、IOS 的 APP。
+村商通是一套基于 ThinkPHP 框架开发的高性能开源商城框架系统，秉承极简、极速、极致的开发理念，采用前后端分离，支持分布式部署。框架内部使用面向对象模块化调用，在多终端、跨平台时采用 REST API 进行数据交互，可直接对接 PC、移动设备、小程序、云部署，构建 Android、IOS 的 APP。
 
 ## 文档
-[文档中心（待完善）](# "PinShop文档中心")
+[文档中心（待完善）](# "村商通文档中心")
 
 ## 仓库
 [Github 仓库](https://github.com/3mcode/pinshop "Github 仓库")
@@ -110,5 +109,5 @@ PinShop 是一套基于 ThinkPHP 框架开发的高性能开源商城框架系�
 > 建议使用`IP`启动，避免使用`localhost`，并且此方法只适合调试环境。
 
 #### 声明
-PinShop 使用 AGPLv3 开源，请遵守 AGPLv3 的相关条款。
+村商通使用 AGPLv3 开源，请遵守 AGPLv3 的相关条款。
 本项目包含的源码（包括第三方）和二进制文件，存在版权信息另行标注的情况。
