@@ -35,7 +35,7 @@ function check_env()
     $items = [
         'os'       => ['操作系统', '不限制', '类Unix', PHP_OS, 'check'],
         'php_low'  => ['PHP最低版', '5.6', '5.6+', PHP_VERSION, 'check'],
-        'php_high' => ['PHP最高版', '7.3', '7.4-', PHP_VERSION, 'check'],
+        'php_high' => ['PHP最高版', '7.4', '7.4-', PHP_VERSION, 'check'],
         'upload'   => ['附件上传', '不限制', '2M+', '未知', 'check'],
         'gd'       => ['GD库', '2.0', '2.0+', '未知', 'check'],
         'disk'     => ['磁盘空间', '100M', '不限制', '未知', 'check'],

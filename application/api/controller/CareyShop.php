@@ -337,6 +337,7 @@ class CareyShop extends Controller
             'type'        => config('ClientGroup.' . ($this->apiDebug ? 'admin' : 'visitor'))['value'],
             'group_id'    => $this->apiDebug ? AUTH_SUPER_ADMINISTRATOR : AUTH_GUEST,
             'client_id'   => $this->apiDebug ? 1 : 0,
+            'shop_id'   => $this->apiDebug ? 1 : 0,
             'client_name' => $this->apiDebug ? 'CareyShop' : '游客',
             'token'       => $this->token,
         ];
@@ -371,6 +372,7 @@ class CareyShop extends Controller
                 'type'        => $data['client_type'],
                 'group_id'    => $data['group_id'],
                 'client_id'   => $data['client_id'],
+                'shop_id'     => $data['shop_id'],
                 'client_name' => $data['username'],
                 'token'       => $this->token,
             ];

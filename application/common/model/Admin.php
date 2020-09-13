@@ -523,8 +523,20 @@ class Admin extends CareyShop
         $adminId = $result->getAttr('admin_id');
         $groupId = $result->getAttr('group_id');
 
+        // 根据账号获取店铺
+        $shop = Shops::get(['admin_id' => $adminId]);
+        if (!$shop) {
+            $shopId = 0;
+        } else{
+            $shopId = $shop->getAttr('shop_id');
+        }
+
+        if ($result->getAttr('status') !== 1) {
+            return $this->setError('账号已禁用');
+        }
+
         $tokenDb = new Token();
-        $tokenResult = $tokenDb->setToken($adminId, $groupId, 1, $data['username'], $data['platform']);
+        $tokenResult = $tokenDb->setToken($adminId, $groupId, 1, $data['username'], $data['platform'], $shopId);
 
         if (false === $tokenResult) {
             return $this->setError($tokenDb->getError());

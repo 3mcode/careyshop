@@ -2062,7 +2062,7 @@ class Order extends CareyShop
 
         // 搜索条件
         $map['is_delete'] = ['eq', 0];
-        is_client_admin() ?: $map['user_id'] = ['eq', get_client_id()];
+        is_client_admin() ? $map['shop_id'] = ['eq', get_client_shop_id()] : $map['user_id'] = ['eq', get_client_id()];
         empty($data['consignee']) ?: $map['consignee'] = ['eq', $data['consignee']];
         empty($data['mobile']) ?: $map['mobile'] = ['eq', $data['mobile']];
         empty($data['payment_code']) ?: $map['payment_code'] = ['eq', $data['payment_code']];

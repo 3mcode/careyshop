@@ -1,5 +1,5 @@
 var serverConfig = {
-  BASE_API: '/api',
-  APP_KEY: '56772473',
-  APP_SECRET: 'd07949258c18c66e5982d53ca1cf7e90'
+  BASE_API: 'http://127.0.0.1:200/index.php/api',
+  APP_KEY: '61943911',
+  APP_SECRET: '7735f86771ae990d8b99343a014328a6'
 }

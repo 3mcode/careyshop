@@ -60,6 +60,17 @@ if (!function_exists('get_client_id')) {
     }
 }
 
+if (!function_exists('get_client_shop_id')) {
+    /**
+     * 返回当前账号店铺编号
+     * @return int
+     */
+    function get_client_shop_id()
+    {
+        return isset($GLOBALS['client']['shop_id']) ? $GLOBALS['client']['shop_id'] : 0;
+    }
+}
+
 if (!function_exists('get_client_name')) {
     /**
      * 返回当前账号登录名

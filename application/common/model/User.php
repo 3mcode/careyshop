@@ -577,7 +577,7 @@ class User extends CareyShop
         $groupId = $result->getAttr('group_id');
 
         $tokenDb = new Token();
-        $tokenResult = $tokenDb->setToken($userId, $groupId, 0, $data['username'], $data['platform']);
+        $tokenResult = $tokenDb->setToken($userId, $groupId, 0, $data['username'], $data['platform'], 0);
 
         if (false === $tokenResult) {
             return $this->setError($tokenDb->getError());

@@ -19,6 +19,7 @@ class Token extends CareyShop
     protected $readonly = [
         'token_id',
         'client_id',
+        'shop_id',
         'username',
         'client_type',
         'platform',
@@ -31,6 +32,7 @@ class Token extends CareyShop
     protected $hidden = [
         'token_id',
         'client_id',
+        'shop_id',
         'client_type',
         'code',
     ];
@@ -42,6 +44,7 @@ class Token extends CareyShop
     protected $type = [
         'token_id'        => 'integer',
         'client_id'       => 'integer',
+        'shop_id'       => 'integer',
         'group_id'        => 'integer',
         'client_type'     => 'integer',
         'token_expires'   => 'integer',
@@ -52,6 +55,7 @@ class Token extends CareyShop
      * 产生Token
      * @access public
      * @param  int    $id       编号
+     * @param  int    $shop_id  店铺编号
      * @param  int    $group    用户组编号
      * @param  int    $type     顾客或管理组
      * @param  string $username 账号
@@ -59,15 +63,17 @@ class Token extends CareyShop
      * @return false|array
      * @throws
      */
-    public function setToken($id, $group, $type, $username, $platform)
+    public function setToken($id, $group, $type, $username, $platform, $shop_id=0)
     {
         $code = rand_string();
         $token = user_md5(sprintf('%d%d%s', $id, $type, $code));
         $expires = time() + (30 * 24 * 60 * 60); // 30天
 
+
         // 准备数据
         $data = [
             'client_id'       => $id,
+            'shop_id'         => $shop_id,
             'group_id'        => $group,
             'username'        => $username,
             'client_type'     => $type,

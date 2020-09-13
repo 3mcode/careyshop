@@ -2,7 +2,7 @@
 /**
  * @copyright   Copyright (c) http://careyshop.cn All rights reserved.
  *
- * CareyShop    商品模型
+ * CareyShop    店铺模型
  *
  * @author      zxm <252404501@qq.com>
  * @date        2017/4/11
@@ -14,22 +14,22 @@ use think\Cache;
 use util\Http;
 use think\helper\Str;
 
-class Goods extends CareyShop
+class Shops extends CareyShop
 {
     /**
-     * 商品属性模型对象
+     * 店铺属性模型对象
      * @var object
      */
-    private static $goodsAttr = null;
+    private static $shopsAttr = null;
 
     /**
-     * 商品规格模型对象
+     * 店铺规格模型对象
      * @var object
      */
-    private static $specGoods = null;
+    private static $specShops = null;
 
     /**
-     * 商品规格图片模型对象
+     * 店铺规格图片模型对象
      * @var object
      */
     private static $specImage = null;
@@ -45,9 +45,7 @@ class Goods extends CareyShop
      * @var array
      */
     protected $readonly = [
-        'goods_id',
-        'comment_sum',
-        'sales_sum',
+        'shop_id'
     ];
 
     /**
@@ -55,28 +53,7 @@ class Goods extends CareyShop
      * @var array
      */
     protected $type = [
-        'goods_id'          => 'integer',
-        'goods_category_id' => 'integer',
-        'brand_id'          => 'integer',
-        'store_qty'         => 'integer',
-        'comment_sum'       => 'integer',
-        'sales_sum'         => 'integer',
-        'measure'           => 'float',
-        'measure_type'      => 'integer',
-        'is_postage'        => 'integer',
-        'market_price'      => 'float',
-        'shop_price'        => 'float',
-        'integral_type'     => 'integer',
-        'give_integral'     => 'float',
-        'is_integral'       => 'integer',
-        'least_sum'         => 'integer',
-        'purchase_sum'      => 'integer',
-        'attachment'        => 'array',
-        'video'             => 'array',
-        'is_recommend'      => 'integer',
-        'is_new'            => 'integer',
-        'is_hot'            => 'integer',
-        'goods_type_id'     => 'integer',
+        'shop_id'          => 'integer',
         'sort'              => 'integer',
         'status'            => 'integer',
         'is_delete'         => 'integer',
@@ -87,29 +64,9 @@ class Goods extends CareyShop
      * @access public
      * @return mixed
      */
-    public function goodsAttrItem()
+    public function shopsAttrItem()
     {
-        return $this->hasMany('GoodsAttr', 'goods_id');
-    }
-
-    /**
-     * hasMany cs_spec_goods
-     * @access public
-     * @return mixed
-     */
-    public function goodsSpecItem()
-    {
-        return $this->hasMany('SpecGoods', 'goods_id');
-    }
-
-    /**
-     * hasMany cs_spec_image
-     * @access public
-     * @return mixed
-     */
-    public function specImage()
-    {
-        return $this->hasMany('SpecImage', 'goods_id');
+        return $this->hasMany('ShopsAttr', 'shop_id');
     }
 
     /**
@@ -119,9 +76,7 @@ class Goods extends CareyShop
      */
     protected static function init()
     {
-        !is_null(self::$goodsAttr) ?: self::$goodsAttr = new GoodsAttr();
-        !is_null(self::$specGoods) ?: self::$specGoods = new SpecGoods();
-        !is_null(self::$specImage) ?: self::$specImage = new SpecImage();
+        !is_null(self::$shopsAttr) ?: self::$shopsAttr = new ShopsAttr();
     }
 
     /**
@@ -136,7 +91,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 产生随机10位的商品货号
+     * 产生随机10位的店铺号
      * @access private
      * @return string
      */
@@ -150,7 +105,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 检测商品货号是否唯一
+     * 检测店铺店铺货号是否唯一
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -165,17 +120,17 @@ class Goods extends CareyShop
         !isset($data['exclude_id']) ?: $map['goods_id'] = ['neq', $data['exclude_id']];
 
         if (self::checkUnique($map)) {
-            return $this->setError('商品货号已存在');
+            return $this->setError('店铺货号已存在');
         }
 
         return true;
     }
 
     /**
-     * 添加商品附加属性与规格
+     * 添加店铺附加属性与规格
      * @access private
-     * @param  int   $goodsId 商品编号
-     * @param  array &$result 商品自身数据集
+     * @param  int   $goodsId 店铺编号
+     * @param  array &$result 店铺自身数据集
      * @param  array $data    外部数据
      * @return bool
      */
@@ -184,7 +139,7 @@ class Goods extends CareyShop
         // 检测规格是否存在自定义,存在则更新,并且返回会附带规格图集合
         \app\common\service\SpecGoods::validateSpecMenu($data);
 
-        // 插入商品属性列表
+        // 插入店铺属性列表
         if (!empty($data['attr_config'])) {
             $attrList = [];
             GoodsAttrConfig::updateAttrConfig($goodsId, $data['attr_config']);
@@ -215,23 +170,23 @@ class Goods extends CareyShop
             }
         }
 
-        // 处理商品规格配置
+        // 处理店铺规格配置
         if (!empty($data['spec_config'])) {
             SpecConfig::updateSpecConfig($goodsId, $data['spec_config']);
         }
 
-        // 插入商品规格组合列表
+        // 插入店铺规格组合列表
         if (!empty($data['spec_combo'])) {
             if (false === self::$specGoods->addGoodsSpec($goodsId, $data['spec_combo'])) {
                 return $this->setError(self::$specGoods->getError());
             }
 
-            // 计算实际商品库存并更新
+            // 计算实际店铺库存并更新
             $result['store_qty'] = (int)array_sum(array_column($data['spec_combo'], 'store_qty'));
             $this->where(['goods_id' => ['eq', $goodsId]])->setField('store_qty', $result['store_qty']);
         }
 
-        // 插入商品规格图片
+        // 插入店铺规格图片
         if (!empty($data['spec_image'])) {
             if (false === self::$specImage->addSpecImage($goodsId, $data['spec_image'])) {
                 return $this->setError(self::$specImage->getError());
@@ -242,7 +197,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 添加一个商品
+     * 添加一个店铺
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -284,7 +239,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 编辑一个商品
+     * 编辑一个店铺
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -301,7 +256,7 @@ class Goods extends CareyShop
             $map['goods_code'] = ['eq', $data['goods_code']];
 
             if (self::checkUnique($map)) {
-                return $this->setError('商品货号已存在');
+                return $this->setError('店铺货号已存在');
             }
 
             // 如果为空则产生一个随机货号
@@ -351,7 +306,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取一个商品
+     * 获取一个店铺
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -359,12 +314,12 @@ class Goods extends CareyShop
      */
     public function getGoodsItem($data)
     {
-        if (!$this->validateData($data, 'Goods.item')) {
+        if (!$this->validateData($data, 'Shops.item')) {
             return false;
         }
 
         $result = self::get(function ($query) use ($data) {
-            $query->where(['goods_id' => ['eq', $data['goods_id']]]);
+            $query->where(['shop_id' => ['eq', $data['shop_id']]]);
         });
 
         if (false !== $result) {
@@ -375,7 +330,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量删除或恢复商品(回收站)
+     * 批量删除或恢复店铺(回收站)
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -396,7 +351,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取指定编号商品的基础数据
+     * 获取指定编号店铺的基础数据
      * @access public
      * @param  array $data 外部数据
      * @return array|bool
@@ -424,7 +379,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量设置或关闭商品可积分抵扣
+     * 批量设置或关闭店铺可积分抵扣
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -444,7 +399,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量设置商品是否推荐
+     * 批量设置店铺是否推荐
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -464,7 +419,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量设置商品是否为新品
+     * 批量设置店铺是否为新品
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -484,7 +439,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量设置商品是否为热卖
+     * 批量设置店铺是否为热卖
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -504,7 +459,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 批量设置商品是否上下架
+     * 批量设置店铺是否上下架
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -524,7 +479,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取指定商品的属性列表
+     * 获取指定店铺的属性列表
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -548,7 +503,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取指定商品的规格组合列表
+     * 获取指定店铺的规格组合列表
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -572,7 +527,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取指定商品的规格图
+     * 获取指定店铺的规格图
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -596,7 +551,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取管理后台商品列表
+     * 获取管理后台店铺列表
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -608,7 +563,7 @@ class Goods extends CareyShop
             return false;
         }
 
-        // 获取商品分类Id,包括子分类
+        // 获取店铺店铺分类Id,包括子分类
         $catIdList = [];
         if (isset($data['goods_category_id'])) {
             if (0 == $data['goods_category_id'] || '' == $data['goods_category_id']) {
@@ -621,7 +576,6 @@ class Goods extends CareyShop
 
         // 搜索条件
         $map = [];
-        $map['shop_id'] = ['eq', get_client_shop_id()];
         !isset($data['goods_id']) ?: $map['goods_id'] = ['in', $data['goods_id']];
         !isset($data['exclude_id']) ?: $map['goods_id'] = ['not in', $data['exclude_id']];
         empty($data['goods_code']) ?: $map['goods_code|goods_spu|goods_sku|bar_code'] = ['eq', $data['goods_code']];
@@ -685,7 +639,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品分类获取指定类型的商品(推荐,热卖,新品,积分,同品牌,同价位)
+     * 根据店铺分类获取指定类型的店铺(推荐,热卖,新品,积分,同品牌,同价位)
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -748,7 +702,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 筛选价格与品牌后获取商品Id
+     * 筛选价格与品牌后获取店铺Id
      * @access private
      * @param  array $data 外部数据
      * @return array
@@ -775,7 +729,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 筛选规格后获取商品Id
+     * 筛选规格后获取店铺Id
      * @access private
      * @param  array $specList 规格列表
      * @return array
@@ -817,7 +771,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 筛选属性后获取商品Id
+     * 筛选属性后获取店铺Id
      * @access private
      * @param  array $attrList 属性列表
      * @return array
@@ -967,9 +921,9 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品Id生成价格筛选菜单
+     * 根据店铺Id生成价格筛选菜单
      * @access private
-     * @param  array $goodsIdList 商品编号
+     * @param  array $goodsIdList 店铺编号
      * @param  int   $page        价格分段
      * @return array
      */
@@ -1017,9 +971,9 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品Id生成品牌筛选菜单
+     * 根据店铺Id生成品牌筛选菜单
      * @access private
-     * @param  array $goodsIdList 商品编号
+     * @param  array $goodsIdList 店铺编号
      * @return array
      * @throws
      */
@@ -1078,9 +1032,9 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品Id生成规格筛选菜单
+     * 根据店铺Id生成规格筛选菜单
      * @access private
-     * @param  array $goodsIdList 商品编号
+     * @param  array $goodsIdList 店铺编号
      * @param  array $filterParam 已筛选的条件
      * @return array
      */
@@ -1090,7 +1044,7 @@ class Goods extends CareyShop
             return [];
         }
 
-        // 根据商品编号获取所有规格项
+        // 根据店铺编号获取所有规格项
         $specKeyList = self::$specGoods->field(['group_concat(key_name separator "_")' => 'key_name'])
             ->where(['goods_id' => ['in', $goodsIdList]])
             ->find();
@@ -1143,9 +1097,9 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品Id生成属性筛选菜单
+     * 根据店铺Id生成属性筛选菜单
      * @access private
-     * @param  array $goodsIdList 商品编号
+     * @param  array $goodsIdList 店铺编号
      * @param  array $filterParam 已筛选的条件
      * @return array
      * @throws
@@ -1156,7 +1110,7 @@ class Goods extends CareyShop
             return [];
         }
 
-        // 根据商品编号获取所有属性列表
+        // 根据店铺编号获取所有属性列表
         $goodsArrtResult = self::$goodsAttr->field('goods_attribute_id,attr_value,sort')
             ->where(['goods_id' => ['in', $goodsIdList]])
             ->where(['parent_id' => ['neq', 0], 'attr_value' => ['neq', '']])
@@ -1198,9 +1152,9 @@ class Goods extends CareyShop
     }
 
     /**
-     * 搜索商品时返回对应的商品分类
+     * 搜索店铺时返回对应的店铺分类
      * @access private
-     * @param  array $goodsIdList 商品编号
+     * @param  array $goodsIdList 店铺编号
      * @param  array $data        外部数据
      * @return array
      */
@@ -1210,7 +1164,7 @@ class Goods extends CareyShop
             return [];
         }
 
-        // 如果分类Id为空表示搜索全部商品
+        // 如果分类Id为空表示搜索全部店铺
         if (empty($data['goods_category_id'])) {
             $map['goods_id'] = ['in', $goodsIdList];
             $data['goods_category_id'] = array_unique($this->where($map)->column('goods_category_id'));
@@ -1238,10 +1192,10 @@ class Goods extends CareyShop
     }
 
     /**
-     * 判断商品分类是否存在,并且取该分类所有的子Id
+     * 判断店铺分类是否存在,并且取该分类所有的子Id
      * @access public
      * @param  array &$data         外部数据
-     * @param  array $goodsCateList 购物车商品列表
+     * @param  array $goodsCateList 购物车店铺列表
      * @return bool
      */
     private function isCategoryList($data, &$goodsCateList)
@@ -1258,7 +1212,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 根据商品分类获取前台商品列表页
+     * 根据店铺分类获取前台店铺列表页
      * @access public
      * @param  array $data 外部数据
      * @return array|false
@@ -1273,7 +1227,7 @@ class Goods extends CareyShop
         // 需要保留"$data['goods_category_id']",用以判断搜索时的分类条件
         $goodsCateList = [];
         if (!$this->isCategoryList($data, $goodsCateList)) {
-            return $this->setError('商品分类不存在');
+            return $this->setError('店铺分类不存在');
         }
 
         // 搜索条件
@@ -1296,10 +1250,10 @@ class Goods extends CareyShop
         $result = [];
         $filterParam = []; // 将筛选条件归类(所有的筛选都是数组)
 
-        // 根据分类数组获取所有对应的商品Id
+        // 根据分类数组获取所有对应的店铺Id
         $goodsIdList = self::scope('global')->where($map)->column('goods_id');
 
-        // 对商品进行价格与品牌筛选
+        // 对店铺进行价格与品牌筛选
         if (!empty($data['shop_price']) || !empty($data['brand_id'])) {
             $priceBrandIdList = $this->getGoodsIdByBrandPrice($data);
             $goodsIdList = array_intersect($goodsIdList, $priceBrandIdList);
@@ -1308,21 +1262,21 @@ class Goods extends CareyShop
             empty($data['brand_id']) ?: $filterParam['brand'] = $data['brand_id'];
         }
 
-        // 对商品进行规格筛选
+        // 对店铺进行规格筛选
         if (!empty($data['spec_list'])) {
             $specIdList = $this->getGoodsIdBySpec($data['spec_list']);
             $goodsIdList = array_intersect($goodsIdList, $specIdList);
             $filterParam['spec'] = $data['spec_list'];
         }
 
-        // 对商品进行属性筛选
+        // 对店铺进行属性筛选
         if (!empty($data['attr_list'])) {
             $attrIdList = $this->getGoodsIdByAttr($data['attr_list']);
             $goodsIdList = array_intersect($goodsIdList, $attrIdList);
             $filterParam['attr'] = $data['attr_list'];
         }
 
-        // 根据筛选后的商品Id生成各项菜单
+        // 根据筛选后的店铺Id生成各项菜单
         $result['filter_menu'] = $this->getFilterMenu($filterParam);
         $result['filter_price'] = empty($filterParam['price']) ? $this->getFilterPrice($goodsIdList) : [];
         $result['filter_brand'] = empty($filterParam['brand']) ? $this->getFilterBrand($goodsIdList) : [];
@@ -1372,7 +1326,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 设置商品排序
+     * 设置店铺排序
      * @access public
      * @param  array $data 外部数据
      * @return bool
@@ -1392,7 +1346,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取商品关键词联想词
+     * 获取店铺关键词联想词
      * @access public
      * @param  array $data 外部数据
      * @return array
@@ -1415,7 +1369,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 复制一个商品
+     * 复制一个店铺
      * @access public
      * @param  array $data 外部数据
      * @return false|array
@@ -1424,7 +1378,7 @@ class Goods extends CareyShop
     public function copyGoodsItem($data)
     {
         if (!isset($data['goods_id'])) {
-            return $this->setError('商品编号不能为空');
+            return $this->setError('店铺编号不能为空');
         }
 
         $result = self::get(function ($query) use ($data) {
@@ -1432,7 +1386,7 @@ class Goods extends CareyShop
         });
 
         if (is_null($result)) {
-            return $this->setError('商品不存在');
+            return $this->setError('店铺不存在');
         }
 
         // 清理原始数据
@@ -1461,7 +1415,7 @@ class Goods extends CareyShop
     }
 
     /**
-     * 获取指定商品的规格菜单数据
+     * 获取指定店铺店铺的规格菜单数据
      * @access public
      * @param  array $data 外部数据
      * @return array|bool
